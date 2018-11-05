@@ -65,7 +65,7 @@ function getEmitter() {
     function unsubscribe(field, context) {
         let newField = field;
         for (const nextField in newField) {
-            if (newField[nextField] && newField[nextField].has(context)) {
+            if (newField[nextField]) {
                 newField[nextField].delete(context);
                 newField = newField[nextField];
             }
@@ -99,9 +99,9 @@ function getEmitter() {
             for (const eventCurrent of eventsArr) {
                 field = field[eventCurrent];
             }
+            unsubscribe(field, context);
             if (field) {
                 field.delete(context);
-                unsubscribe(field, context);
             }
 
             return this;
