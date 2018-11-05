@@ -35,20 +35,6 @@ function getEmitter() {
         }
     }
 
-    function getLastFieldEvenst(arrEvents) {
-        let fieldEvent = events;
-        if (!fieldEvent[arrEvents[0]]) {
-            return undefined;
-        }
-        for (const eventCurrent of arrEvents) {
-            if (fieldEvent[eventCurrent]) {
-                fieldEvent = fieldEvent[eventCurrent];
-            }
-        }
-
-        return fieldEvent;
-    }
-
     function getCorrectFieldForEmit(arrEvents) {
         let fieldEvent = events;
         if (!fieldEvent[arrEvents[0]]) {
@@ -96,9 +82,14 @@ function getEmitter() {
          * @returns {Object} this
          */
         off: function (event, context) {
-            const arrEvents = event.split('.');
-            const fieldEvent = getLastFieldEvenst(arrEvents);
-            fieldEvent.delete(context);
+            const eventsArr = event.split('.');
+            let field = events;
+            for (const eventCurrent of eventsArr) {
+                field = field[eventCurrent];
+            }
+            if (field) {
+                field.delete(context);
+            }
 
             return this;
         },
