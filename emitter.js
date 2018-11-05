@@ -4,7 +4,7 @@
  * Сделано задание на звездочку
  * Реализованы методы several и through
  */
-const isStar = false;
+const isStar = true;
 
 /**
  * Возвращает новый emitter
@@ -25,11 +25,10 @@ function getEmitter() {
             if (!fieldEvent[eventCurrent].has(context)) {
                 fieldEvent[eventCurrent].set(context, {
                     handler: handler,
-                    count: 1
+                    count: 0,
+                    times: arguments[3] || Infinity,
+                    frequency: arguments[4] || 1
                 });
-            } else {
-                const field = fieldEvent[eventCurrent].get(context);
-                field.count += 1;
             }
             fieldEvent = fieldEvent[eventCurrent];
         }
@@ -56,7 +55,13 @@ function getEmitter() {
             return;
         }
         for (const context of event.keys()) {
-            event.get(context).handler.call(context);
+            const countEvent = event.get(context).count;
+            let timeEvent = event.get(context).times;
+            let frequencyEvent = event.get(context).frequency;
+            if ((countEvent < timeEvent) && !(countEvent % frequencyEvent)) {
+                event.get(context).handler.call(context);
+            }
+            event.get(context).count++;
         }
     }
 
@@ -70,9 +75,7 @@ function getEmitter() {
          * @returns {Object} this
          */
         on: function (event, context, handler) {
-            if (event && context && handler) {
-                subsribe(event, context, handler);
-            }
+            subsribe(event, context, handler);
 
             return this;
         },
@@ -121,9 +124,13 @@ function getEmitter() {
          * @param {Object} context
          * @param {Function} handler
          * @param {Number} times – сколько раз получить уведомление
+         * @returns {Object} this
          */
         several: function (event, context, handler, times) {
-            console.info(event, context, handler, times);
+            times = times <= 0 ? Infinity : times;
+            subsribe(event, context, handler, times);
+
+            return this;
         },
 
         /**
@@ -133,9 +140,13 @@ function getEmitter() {
          * @param {Object} context
          * @param {Function} handler
          * @param {Number} frequency – как часто уведомлять
+         * @returns {Object} this
          */
         through: function (event, context, handler, frequency) {
-            console.info(event, context, handler, frequency);
+            frequency = frequency <= 0 ? 1 : frequency;
+            subsribe(event, context, handler, undefined, frequency);
+
+            return this;
         }
     };
 }
