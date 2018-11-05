@@ -70,7 +70,9 @@ function getEmitter() {
          * @returns {Object} this
          */
         on: function (event, context, handler) {
-            subsribe(event, context, handler);
+            if (event && context && handler) {
+                subsribe(event, context, handler);
+            }
 
             return this;
         },
@@ -105,12 +107,9 @@ function getEmitter() {
                 const correctEvent = getCorrectFieldForEmit(arrEvents);
                 if (correctEvent) {
                     startEmit(correctEvent);
-                    // console.log(events, 'after', arrEvents.length, arrEvents);
                 }
                 arrEvents.pop();
             }
-            // console.log(correctEvent)
-            // startEmit(getLastFieldEvenst(arrEvents[0]));
 
             return this;
         },
