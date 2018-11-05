@@ -36,9 +36,6 @@ function getEmitter() {
 
     function getCorrectFieldForEmit(arrEvents) {
         let fieldEvent = events;
-        if (!fieldEvent[arrEvents[0]]) {
-            return undefined;
-        }
         for (const eventCurrent of arrEvents) {
             if (fieldEvent[eventCurrent]) {
                 fieldEvent = fieldEvent[eventCurrent];
@@ -62,6 +59,16 @@ function getEmitter() {
                 event.get(context).handler.call(context);
             }
             event.get(context).count++;
+        }
+    }
+
+    function unsubscribe(field, context) {
+        let newField = field;
+        for (const nextField in newField) {
+            if (newField[nextField] && newField[nextField].has(context)) {
+                newField[nextField].delete(context);
+                newField = newField[nextField];
+            }
         }
     }
 
@@ -94,6 +101,7 @@ function getEmitter() {
             }
             if (field) {
                 field.delete(context);
+                unsubscribe(field, context);
             }
 
             return this;
