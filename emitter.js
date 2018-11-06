@@ -63,13 +63,12 @@ function getEmitter() {
     }
 
     function unsubscribe(field, context) {
-        let newField = field;
+        const newField = field;
         for (const nextField in newField) {
             if (newField[nextField]) {
+                unsubscribe(newField[nextField], context);
                 newField[nextField].delete(context);
-                newField = newField[nextField];
-            } else {
-                newField = newField[nextField];
+
             }
         }
     }
@@ -104,10 +103,12 @@ function getEmitter() {
                     field = field[eventCurrent];
                 }
             }
+            // console.log(events,'before');
             unsubscribe(field, context);
             if (field) {
                 field.delete(context);
             }
+            // console.log(events,'after');
 
             return this;
         },
