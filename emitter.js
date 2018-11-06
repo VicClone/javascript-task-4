@@ -100,7 +100,9 @@ function getEmitter() {
             eventsArr.filter(eventCurrent => Boolean(eventCurrent));
             let field = events;
             for (const eventCurrent of eventsArr) {
-                field = field[eventCurrent];
+                if (field) {
+                    field = field[eventCurrent];
+                }
             }
             unsubscribe(field, context);
             if (field) {
