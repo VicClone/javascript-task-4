@@ -103,6 +103,8 @@ function getEmitter() {
             for (const eventCurrent of eventsArr) {
                 if (field) {
                     field = field[eventCurrent];
+                } else {
+                    return this;
                 }
             }
             unsubscribe(field, context);
