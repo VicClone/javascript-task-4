@@ -95,14 +95,15 @@ function getEmitter() {
          */
         off: function (event, context) {
             const eventsArr = event.split('.');
+            eventsArr.filter(eventCurrent => !!eventCurrent);
             let field = events;
             for (const eventCurrent of eventsArr) {
                 field = field[eventCurrent];
             }
             unsubscribe(field, context);
-            if (field) {
-                field.delete(context);
-            }
+            // if (field) {
+            //     field.delete(context);
+            // }
 
             return this;
         },
