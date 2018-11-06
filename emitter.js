@@ -68,7 +68,6 @@ function getEmitter() {
             if (newField[nextField]) {
                 unsubscribe(newField[nextField], context);
                 newField[nextField].delete(context);
-
             }
         }
     }
@@ -96,19 +95,15 @@ function getEmitter() {
          */
         off: function (event, context) {
             const eventsArr = event.split('.');
-            eventsArr.filter(eventCurrent => Boolean(eventCurrent));
+            // eventsArr.filter(eventCurrent => Boolean(eventCurrent));
             let field = events;
             for (const eventCurrent of eventsArr) {
-                if (field) {
-                    field = field[eventCurrent];
-                }
+                field = field[eventCurrent];
             }
-            // console.log(events,'before');
             unsubscribe(field, context);
             if (field) {
                 field.delete(context);
             }
-            // console.log(events,'after');
 
             return this;
         },
